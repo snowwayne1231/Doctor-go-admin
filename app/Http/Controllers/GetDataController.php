@@ -12,7 +12,7 @@ class GetDataController extends BasicController
     public function index(Request $request, $models, $wheres = '')
     {
         $result = $this->parseResultByModelWhere($models, $wheres);
-
+        // dd($result);
         return $this->basicJSON($result);
     }
 

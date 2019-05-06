@@ -11,6 +11,7 @@ use App\Models\Address;
 use App\Models\PaymentCart;
 use App\Models\PaymentOrder;
 use App\Models\PaymentOrderProduct;
+use App\Models\SettingPromotion;
 
 class OrderController extends BasicController
 {
@@ -18,7 +19,9 @@ class OrderController extends BasicController
     public function create(Request $request) {
         $inputs = $this->validate($request, [
             'json' => 'required|json',
+            'promotion' => 'required|numeric',
         ]);
+
 
         $buying = json_decode($inputs['json'], true);
         $customer = $request->customer;
@@ -39,9 +42,17 @@ class OrderController extends BasicController
         $order->payment_country_id = $customer['address']['country_id'];
         // $order->language_id = 1;
         $order->ip = $request->ip();
+        $order->promotion_id = $inputs['promotion'];
+
+        $promotion = SettingPromotion::find($inputs['promotion']);
+
+        if (!$promotion) {
+            throw new \Exception('錯誤的優惠代號');
+        }
         
+        
+        $total_redeem = $promotion->redeem_point;
         $total_price = 0;
-        $total_redeem = 0;
         $order_products = [];
 
         $products = Product::whereIn('id', $product_ids);
@@ -85,6 +96,10 @@ class OrderController extends BasicController
             throw new \Exception('紅利點數不足');
         }
 
+        if ($total_price < 0) {
+            throw new \Exception('錯誤的價格 請洽客服諮詢');
+        }
+
         $order->total_redeem = round($total_redeem, 2);
         $order->total = round($total_price, 2);
         $order->total_net = round($total_price - $total_redeem, 2);
@@ -111,7 +126,7 @@ class OrderController extends BasicController
         $cart->save();
 
         \Mail::raw('有訂單剛剛完成下單 從 '.$request->ip().' 訂單時間: '. now(), function($message) {
-            $message->to('srxformosa12@gmail.com')->subject('美醫聯購 手機 APP 訂單下單');
+            $message->to(env('MAIL_FROM_ADDRESS'))->subject('美醫聯購 手機 APP 訂單下單');
         });
 
         $result = [

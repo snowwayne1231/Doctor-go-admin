@@ -31,4 +31,11 @@ class Customer extends Model
         return $this;
     }
 
+    public function removeCache() {
+        $id = $this->id;
+        $key = "customer_$id";
+        $customer = \Cache::pull($key);
+        return $this;
+    }
+
 }

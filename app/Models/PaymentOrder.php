@@ -39,4 +39,8 @@ class PaymentOrder extends Model
     public function products() {
         return $this->hasMany('App\Models\PaymentOrderProduct', 'order_id');
     }
+
+    public function promotion() {
+        return $this->hasOne('App\Models\SettingPromotion', 'id', 'promotion_id');
+    }
 }

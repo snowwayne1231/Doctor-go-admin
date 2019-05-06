@@ -36,14 +36,16 @@ Route::group([
         $router2->resource('ad_banner', AdBannerController::class);
         $router2->resource('ad_point_banner', AdPointBannerController::class);
         $router2->resource('ad_news', AdNewsController::class);
+        $router2->any('ad_news_links', 'AdNewsController@links');
         $router2->resource('ad_event', AdEventController::class);
 
         $router2->resource('article_magazine', ArticleMagazineController::class);
         $router2->resource('article_chapter', ArticleChapterController::class);
 
         $router2->resource('setting_point_give', SettingPointGiveController::class);
+        $router2->resource('setting_promotion', SettingPromotionController::class);
         
-
+        
         
 
     });

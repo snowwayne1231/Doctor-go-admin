@@ -67,6 +67,7 @@ class ArticleChapterController extends Controller
         $grid->magazine('刊')->display(function($magazine){
             return str_limit($magazine['title'], 12, '..');
         });
+        $grid->public_date('發佈日期');
         $grid->enable('啟用')->switch();
         
         $grid->author('作者')->limit(12);
@@ -97,6 +98,7 @@ class ArticleChapterController extends Controller
 
         $show->id('ID');
         $show->enable('啟用')->using([1 => '開', 0 => '關']);
+        $show->public_date('發佈日期');
         $show->magazine_id('刊')->as(function($magazine){
             return ArticlePsaMagazine::find($magazine)->title;
         });
@@ -126,6 +128,7 @@ class ArticleChapterController extends Controller
         $magazine_options = ArticlePsaMagazine::all()->pluck('title', 'id');
         
         $form->switch('enable', '啟用')->default(true);
+        $form->date('public_date', '發佈日期(超過該日期才會顯示)');
         $form->select('magazine_id', '刊')->options($magazine_options);
         $form->text('author', '作者');
         $form->text('title', '標題');

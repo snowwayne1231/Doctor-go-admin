@@ -126,9 +126,24 @@ class PaymentOrderController extends Controller
         $show->payment_postcode('郵遞區號');
         $show->payment_address('地址');
         $show->ip('IP');
+        
+
         $show->total('訂單總價');
         $show->total_redeem('訂單總折抵');
         $show->total_net('訂單淨價');
+
+        $show->promotion('選用優惠', function($promotion) {
+            
+            $promotion->name('名稱');
+            $promotion->redeem_point('折抵點數');
+
+            $promotion->panel()->tools(function ($tools) {
+                $tools->disableEdit();
+                $tools->disableList();
+                $tools->disableDelete();
+            });;
+        });
+        
 
         $show->products('商品', function($product) {
 

@@ -8,7 +8,7 @@ class ArticlePsaChapter extends Model
 {
     //
     protected $fillable = ['title', 'image', 'sort', 'enable', 'public_date'];
-    protected $hidden = ['created_at', 'magazine_id'];
+    protected $hidden = ['created_at'];
 
     public function magazine() {
         return $this->belongsTo('App\Models\ArticlePsaMagazine', 'magazine_id');

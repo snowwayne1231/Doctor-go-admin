@@ -4,11 +4,13 @@ namespace App\Admin\Controllers;
 
 use App\Models\Customer;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\SmsController;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
+
 
 class CustomerController extends Controller
 {
@@ -67,6 +69,11 @@ class CustomerController extends Controller
         // $grid->password('密碼');
         $grid->firstname('名字');
         $grid->lastname('姓氏');
+        $grid->status('狀態')->select([
+            '0' => '待啟用',
+            '1' => '正常',
+            '4' => '停用',
+        ]);
         $grid->doctor_profile('醫生執照號碼');
         $grid->doctor_profile_image_id('醫生執照圖檔')->display(function($id) {
             return '<img style="max-height: 45px; max-width: 90px;" src="/api/image/'.$id.'">';
@@ -112,7 +119,11 @@ class CustomerController extends Controller
         
         $show->fax('傳真');
         $show->point('點數');
-        $show->status('狀態');
+        $show->status('狀態')->using([
+            '0' => '待啟用',
+            '1' => '正常',
+            '4' => '停用',
+        ]);
 
         $show->doctor_profile('醫生執照');
         $show->doctor_profile_image_id('醫生執照圖檔')->unescape()->as(function($id) {
@@ -140,6 +151,12 @@ class CustomerController extends Controller
     {
         $form = new Form(new Customer);
 
+        $form->select('status', '狀態')->options([
+            '0' => '待啟用',
+            '1' => '正常',
+            '4' => '停用',
+        ]);
+
         $form->email('email', 'Email');
         $form->text('telephone', '手機');
         // $form->text('account', '帳號/手機');
@@ -149,10 +166,6 @@ class CustomerController extends Controller
         
         $form->text('fax', '傳真');
         $form->number('point', '點數');
-        $form->select('status', '狀態')->options([
-            '1' => '正常',
-            '4' => '停用',
-        ]);
 
         $form->text('doctor_profile', '醫生執照');
         // $form->display('doctor_profile_image_id', '');
@@ -161,6 +174,21 @@ class CustomerController extends Controller
         // ->unescape()->as(function($id) {
         //     return '<img style="max-height: 160px; max-width: 480px;" src="/api/image/'.$id.'">';
         // });
+
+
+        $form->saved(function (Form $form) {
+            $model = $form->model();
+
+            if ($model->status == 1) {
+                
+                \Mail::raw('您的帳戶: '.$model->email.' 已經激活， 激活時間: '. now(), function($message) use($model) {
+                    $message->to($model->email)->subject('美醫聯購 手機 APP 帳戶激活');
+                });
+            } else {
+                
+                Customer::find($model->id)->removeCache();
+            }
+        });
 
         return $form;
     }

@@ -259,6 +259,7 @@ class CustomerController extends BasicController
 
     private function makeNewCustomer($inputs) {
         $newCustomer = new Customer();
+        $newCustomer->status = 0;
         $newCustomer->firstname = $inputs['firstname'];
         $newCustomer->lastname = $inputs['lastname'];
         $newCustomer->email = $inputs['email'];

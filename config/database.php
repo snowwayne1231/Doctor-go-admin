@@ -63,6 +63,10 @@ return [
                 'ERROR_FOR_DIVISION_BY_ZERO',
                 'NO_ENGINE_SUBSTITUTION',
             ],
+            'options'   => array(
+                PDO::ATTR_STRINGIFY_FETCHES => false,
+                PDO::ATTR_EMULATE_PREPARES => false,
+            ),
         ],
 
         'pgsql' => [

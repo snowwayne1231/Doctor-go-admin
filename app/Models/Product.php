@@ -8,6 +8,23 @@ class Product extends Model
 {
     //
     // protected $append = ['brand'];
+    protected $casts = [
+        'category_id' => 'integer',
+        'status' => 'integer',
+        'quantity' => 'integer',
+        'stock_status' => 'integer',
+        'price' => 'float',
+        'price_forshow' => 'float',
+        'point_reward' => 'integer',
+        'point_can_be_discount' => 'integer',
+        'sort' => 'integer',
+        'is_shipping' => 'boolean',
+        'store_id' => 'integer',
+        'manufacturer_id' => 'integer',
+        'tax_id' => 'integer',
+        'viewed' => 'integer',
+        'brand_id' => 'integer',
+    ];
 
     public function description()
     {
