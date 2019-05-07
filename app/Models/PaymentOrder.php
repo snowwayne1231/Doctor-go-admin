@@ -28,7 +28,7 @@ class PaymentOrder extends Model
         'store_url',
         // 'customer_email',
         'customer_group_id',
-        'customer_id',
+        // 'customer_id',
         'customer_tax',
     ];
 

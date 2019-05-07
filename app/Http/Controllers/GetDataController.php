@@ -24,10 +24,10 @@ class GetDataController extends BasicController
 
         $append = 'customer_id='.$request->customer['id'];
 
-        if (empty($where)) {
-            $where = $append;
+        if (empty($wheres) || $wheres == "all") {
+            $wheres = $append;
         } else {
-            $where .= ','.$append;;
+            $wheres .= ','.$append;;
         }
 
         $result = $this->parseResultByModelWhere($models, $wheres);
