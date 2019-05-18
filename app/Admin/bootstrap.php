@@ -23,10 +23,8 @@ Encore\Admin\Form::forget(['map']);
 
 use Encore\Admin\Facades\Admin;
 
-// Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
+Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
 
-//     $navbar->left('html...');
+    $navbar->left('<a style="display: inline-block; color: #fff; padding: 5px; border: 1px solid #fff; line-height: 22px; margin: 6px 10px;" href="/admin/mysqldump" target="_blank"><span>備份SQL檔案</span></a>');
 
-//     $navbar->right('html...');
-
-// });
+});

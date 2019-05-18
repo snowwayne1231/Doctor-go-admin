@@ -16,6 +16,7 @@ Route::group([
 
     // upload for wang editor
     $router->any('/upload/product/image', 'UploadController@image');
+    $router->any('/mysqldump', 'DatabaseController@mysqldump');
 
     $router->group([
         'prefix'        => 'maintainer',
