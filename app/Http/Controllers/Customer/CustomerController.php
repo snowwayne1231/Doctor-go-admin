@@ -29,27 +29,28 @@ class CustomerController extends BasicController
             'address_2' => 'required|max:128',
 
             'doctorProfile' => 'required|max:64',
-            'doctorClinic' => 'required|max:64',
+            'doctorClinic' => 'max:64',
 
-            'doctorProfileImage' => 'required|image',
-            'doctorClinicImage' => 'required|image',
+            'doctorProfileImage' => 'image',
+            'doctorClinicImage' => 'image',
         ]);
 
         $customer = $this->makeNewCustomer($inputs);
         $address = $this->makeNewAddress($inputs, $customer->id);
 
         $profileImage = $inputs['doctorProfileImage'];
+        if ($profileImage) {
+            $profileName = $profileImage->getClientOriginalName();
+            $image_profile = Image::saveByImageFile($profileName, $profileImage);
+            $customer->doctor_profile_image_id = $image_profile->id;
+        }
+
         $clinicImage = $inputs['doctorClinicImage'];
-
-        $profileName = $profileImage->getClientOriginalName();
-        $clinicName = $clinicImage->getClientOriginalName();
-
-        $image_profile = Image::saveByImageFile($profileName, $profileImage);
-        $image_clinic = Image::saveByImageFile($clinicName, $clinicImage);
-        
-        // $customer->address_id = $address->id;
-        $customer->doctor_profile_image_id = $image_profile->id;
-        $customer->doctor_clinic_image_id = $image_clinic->id;
+        if ($clinicImage) {
+            $clinicName = $clinicImage->getClientOriginalName();
+            $image_clinic = Image::saveByImageFile($clinicName, $clinicImage);
+            $customer->doctor_clinic_image_id = $image_clinic->id;
+        }
         
         $customer->save();
         $uuid = $request->uuid;
