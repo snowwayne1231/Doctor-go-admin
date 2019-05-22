@@ -44,14 +44,18 @@ class OrderController extends BasicController
         $order->ip = $request->ip();
         $order->promotion_id = $inputs['promotion'];
 
-        $promotion = SettingPromotion::find($inputs['promotion']);
+        if ($inputs['promotion'] > 0) {
+            $promotion = SettingPromotion::find($inputs['promotion']);
 
-        if (!$promotion) {
-            throw new \Exception('錯誤的優惠代號');
+            if (!$promotion) {
+                throw new \Exception('錯誤的優惠代號');
+            }
+
+            $total_redeem = $promotion->redeem_point;
+        } else {
+            $total_redeem = 0;
         }
         
-        
-        $total_redeem = $promotion->redeem_point;
         $total_price = 0;
         $order_products = [];
 
