@@ -38,15 +38,17 @@ class CustomerController extends BasicController
         $customer = $this->makeNewCustomer($inputs);
         $address = $this->makeNewAddress($inputs, $customer->id);
 
-        $profileImage = $inputs['doctorProfileImage'];
-        if ($profileImage) {
+        
+        if (isset($inputs['doctorProfileImage'])) {
+            $profileImage = $inputs['doctorProfileImage'];
             $profileName = $profileImage->getClientOriginalName();
             $image_profile = Image::saveByImageFile($profileName, $profileImage);
             $customer->doctor_profile_image_id = $image_profile->id;
         }
 
-        $clinicImage = $inputs['doctorClinicImage'];
-        if ($clinicImage) {
+        
+        if (isset($inputs['doctorClinicImage'])) {
+            $clinicImage = $inputs['doctorClinicImage'];
             $clinicName = $clinicImage->getClientOriginalName();
             $image_clinic = Image::saveByImageFile($clinicName, $clinicImage);
             $customer->doctor_clinic_image_id = $image_clinic->id;
@@ -267,7 +269,9 @@ class CustomerController extends BasicController
         $newCustomer->telephone = $inputs['telephone'];
         $newCustomer->password = bcrypt($inputs['password']);
         $newCustomer->doctor_profile = $inputs['doctorProfile'];
-        $newCustomer->doctor_clinic = $inputs['doctorClinic'];
+        if (isset($inputs['doctorClinic'])) {
+            $newCustomer->doctor_clinic = $inputs['doctorClinic'];
+        }
         
         $newEventActivePoint = SettingPointGive::find(1)->json['register'];
         $newCustomer->point = intval($newEventActivePoint);
