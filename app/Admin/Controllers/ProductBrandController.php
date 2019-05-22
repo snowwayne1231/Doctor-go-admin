@@ -105,6 +105,7 @@ class ProductBrandController extends Controller
         ]);
 
         $show->image('LOGO')->image();
+        $show->logo_max_width('LOGO最大寬度(px)');
         $show->event_image('活動圖')->image();
 
         $show->sort('優先權');
@@ -130,6 +131,7 @@ class ProductBrandController extends Controller
         $form->textarea('description', '詳細介紹');
 
         $form->image('image', 'LOGO')->uniqueName();
+        $form->number('logo_max_width', 'LOGO最大寬度(px)');
         $form->image('event_image', '活動圖片')->uniqueName();
         $form->number('sort', '優先權')->default(1);
 
