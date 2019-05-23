@@ -68,9 +68,7 @@ class PaymentOrderController extends Controller
         $grid->customer_telephone('客戶手機號')->sortable();
         $grid->customer_name('客戶名');
         $grid->status('狀態')->select([
-            1 => '待洽',
-            2 => '已洽詢',
-            3 => '處理中',
+            1 => '洽詢處理中',
             5 => '完成',
             9 => '錯誤/取消',
         ]);
@@ -91,9 +89,7 @@ class PaymentOrderController extends Controller
         $grid->filter(function($filter){
 
             $filter->equal('狀態')->select([
-                1 => '待洽',
-                2 => '已洽詢',
-                3 => '處理中',
+                1 => '洽詢處理中',
                 5 => '完成',
                 9 => '錯誤/取消',
             ]);
@@ -180,9 +176,7 @@ class PaymentOrderController extends Controller
         $form = new Form(new PaymentOrder);
         
         $form->select('status', '狀態')->options([
-            1 => '待洽',
-            2 => '已洽詢',
-            3 => '處理中',
+            1 => '洽詢處理中',
             5 => '完成',
             9 => '錯誤/取消',
         ]);
