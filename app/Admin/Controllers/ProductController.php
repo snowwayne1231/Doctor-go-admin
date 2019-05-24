@@ -263,12 +263,19 @@ class ProductController extends Controller
         })->tab('圖片', function($form){
             $form->image('image', '主圖')->uniqueName();
             $form->multipleImage('image_detail', '詳細內容圖片')->removable();
+            // $form->image('image_detail', '詳細內容圖片')->multiple()->removable();
         });
 
         $form->saved(function($form){
             $after = $form->input('after-save');
-            if (isset($after)) {
+            $_file_del_ = $form->input('_file_del_');
 
+            if (isset($_file_del_)) {
+                return $form;
+            }
+            
+            if (isset($after)) {
+                return $form;
             } else {
                 return redirect('/admin/maintainer/products');
             }
