@@ -25,7 +25,8 @@ class AuthToken
 
         if (!empty($token)) {
             
-            $decrypt = \Crypt::decrypt($token);
+            // $decrypt = \Crypt::decrypt($token);
+            $decrypt = \Crypt::decryptString($token);
             $decrypt_array = explode(',', $decrypt);
             $decrypt_id = $decrypt_array[0] ?? '';
             $decrypt_telephone = $decrypt_array[1] ?? '';
@@ -37,12 +38,15 @@ class AuthToken
             if (\Cache::has($key)) {
 
                 if ($uuid != $decrypt_uuid) {
+                    \Cache::forget($key);
                     throw new AuthException('登錄裝置與金鑰不匹配 請重新登入');
                 }
 
                 $customer = \Cache::get($key);
+                // dd($customer);
 
                 if ($decrypt_time != $customer['login_time']) {
+                    \Cache::forget($key);
                     throw new AuthException('已有其他地方登入此帳號');
                 }
 

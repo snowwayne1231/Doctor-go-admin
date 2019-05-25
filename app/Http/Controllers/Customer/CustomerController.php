@@ -101,7 +101,7 @@ class CustomerController extends BasicController
     public function logout(Request $request) {
         if (isset($request->customer)) {
             $id = $request->customer['id'];
-            \Cache::pull("customer_$id");
+            \Cache::forget("customer_$id");
         }
         return $this->basicJSON('done');
     }
@@ -220,6 +220,7 @@ class CustomerController extends BasicController
 
     public static function updateCustomer(Request $request, $nextCustomer) {
         $customer = $request->customer;
+        
         $id = $customer['id'];
         
         $model_customer = Customer::find($id);
@@ -238,7 +239,10 @@ class CustomerController extends BasicController
         }
 
         $model_customer->save();
+        
         \Cache::put("customer_$id", $customer, now()->addWeekdays(2));
+
+        // $customer['request_token'] = $request->token;
 
         return $customer;
     }
@@ -248,11 +252,16 @@ class CustomerController extends BasicController
         $id = $customer->id;
         $telephone = $customer->telephone;
         $time = time();
-        $token = \Crypt::encrypt("$id,$telephone,$time,$uuid");
+        // $token = \Crypt::encrypt("$id,$telephone,$time,$uuid");
+        $token = \Crypt::encryptString("$id,$telephone,$time,$uuid");
+        $customer->token = $token;
+        $customer->save();
 
         $array = $customer->toArray();
         $array['token'] = $token;
         $array['login_time'] = $time;
+
+        // dd($array);
 
         \Cache::put("customer_$id", $array, now()->addWeekdays(2));
         
