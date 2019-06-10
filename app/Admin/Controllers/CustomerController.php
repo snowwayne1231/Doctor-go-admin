@@ -159,7 +159,7 @@ class CustomerController extends Controller
 
         $form->email('email', 'Email');
         $form->text('telephone', '手機');
-        // $form->text('account', '帳號/手機');
+        $form->password('password', '密碼');
         
         $form->text('firstname', '名字');
         $form->text('lastname', '姓氏');
@@ -175,15 +175,21 @@ class CustomerController extends Controller
         //     return '<img style="max-height: 160px; max-width: 480px;" src="/api/image/'.$id.'">';
         // });
 
+        $form->saving(function (Form $form) {
+            $form->password = bcrypt($form->password);
+        });
 
         $form->saved(function (Form $form) {
             $model = $form->model();
 
             if ($model->status == 1) {
+
+                if (!is_null(env('MAIL_USERNAME'))) {
+                    \Mail::raw('您的帳戶: '.$model->email.' 已經激活， 激活時間: '. now(), function($message) use($model) {
+                        $message->to($model->email)->subject('美醫聯購 手機 APP 帳戶激活');
+                    });
+                }
                 
-                \Mail::raw('您的帳戶: '.$model->email.' 已經激活， 激活時間: '. now(), function($message) use($model) {
-                    $message->to($model->email)->subject('美醫聯購 手機 APP 帳戶激活');
-                });
             } else {
                 
                 Customer::find($model->id)->removeCache();
