@@ -18,6 +18,13 @@ class ApiAuthenticate
     {
         if (empty($request->customer)) {
             throw new AuthException('需要登入');
+        } else {
+            if (isset($request->customer['error'])) {
+
+                $msg = $request->customer['error'];
+
+                throw new AuthException($msg);
+            }
         }
         return $next($request);
     }

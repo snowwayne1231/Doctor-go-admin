@@ -38,24 +38,28 @@ class AuthToken
             if (\Cache::has($key)) {
 
                 if ($uuid != $decrypt_uuid) {
-                    \Cache::forget($key);
-                    throw new AuthException('登錄裝置與金鑰不匹配 請重新登入');
+                    // \Cache::forget($key);
+                    // throw new AuthException('登錄裝置與金鑰不匹配 請重新登入');
+                    $customer = ['error' => '登錄裝置與金鑰不匹配 請重新登入'];
+                } else {
+                    $customer = \Cache::get($key);
                 }
 
-                $customer = \Cache::get($key);
                 // dd($customer);
 
                 if ($decrypt_time != $customer['login_time']) {
-                    \Cache::forget($key);
-                    throw new AuthException('已有其他地方登入此帳號');
+                    // \Cache::forget($key);
+                    // throw new AuthException('已有其他地方登入此帳號');
+                    $customer = ['error' => '已有其他地方登入此帳號'];
                 }
 
-                $request->request->add(['customer' => $customer]);
-
             } else {
-                throw new AuthException('請重新登入');
+
+                $customer = ['error' => '請重新登入'];
+                // throw new AuthException('請重新登入');
             }
-            
+
+            $request->request->add(['customer' => $customer]);
         }
 
         return $next($request);

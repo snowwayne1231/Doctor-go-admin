@@ -99,7 +99,7 @@ class CustomerController extends BasicController
 
 
     public function logout(Request $request) {
-        if (isset($request->customer)) {
+        if (isset($request->customer) && isset($request->customer['id'])) {
             $id = $request->customer['id'];
             \Cache::forget("customer_$id");
         }
