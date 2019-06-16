@@ -191,7 +191,7 @@ class AdNewsController extends Controller
         return $this->getLinksByType($link_type);
     }
 
-    private function getLinksByType($type) {
+    public function getLinksByType($type) {
         $result = [];
         switch (intval($type)) {
             case 1:
@@ -228,7 +228,7 @@ class AdNewsController extends Controller
                     $result[] = ['id' => $arti->id, 'text' => $name];
                 }
             break;
-            default:
+            case 5:
                 $result = [
                     ['id' => '/tab-article', 'text' => 'PSA美醫指南'],
                     ['id' => '/redeemingcenter\/', 'text' => '點數中心'],
@@ -239,6 +239,9 @@ class AdNewsController extends Controller
                     ['id' => '/productbrand\/', 'text' => '品牌專區'],
                     ['id' => '/collectivebuying\/', 'text' => '團購專區'],
                 ];
+            break;
+            default:
+                $result = [];
         }
         return $result;
     }

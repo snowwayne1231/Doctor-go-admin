@@ -11,6 +11,7 @@ use Encore\Admin\Show;
 
 use App\Models\AdEvent;
 use App\Models\Product;
+use App\Admin\Controllers\AdNewsController;
 
 class AdEventController extends Controller
 {
@@ -40,7 +41,7 @@ class AdEventController extends Controller
         return $content
             ->header(self::$header_title)
             ->description('編輯')
-            ->body($this->form()->edit($id));
+            ->body($this->form($id)->edit($id));
     }
 
     public function create(Content $content)
@@ -104,18 +105,25 @@ class AdEventController extends Controller
         $show = new Show(AdEvent::findOrFail($id));
 
         $show->id('ID');
-        $show->type('類型')->using([
-            1 => '頭條',
-            2 => '推薦',
-            3 => '必讀',
-            4 => '最新',
-        ]);
+        
         $show->enable('啟用')->using([1=>'開', 0=>'關']);
-        $show->title('標頭');
-        $show->headline('標題');
-        $show->content('內容')->unescape()->as(function($content){
-            return "<textarea readonly style='min-height: 160px; min-width: 400px;'>$content</textarea>";
-        });
+        $show->name('名稱');
+        $show->image('活動圖片')->image();
+        // $show->description('內容');
+
+        // $show->link_type('連結類型')->using([
+        //     0 => '無',
+        //     1 => '商品連結',
+        //     2 => '商品品牌連結',
+        //     3 => '商品分類連結',
+        //     4 => '文章連結',
+        //     5 => '其他',
+        //     6 => '外部連結',
+        // ]);
+
+        $show->link('活動連結');
+        $show->show_index('首頁顯示');
+        
         $show->sort('優先權');
         
         $show->created_at('創建時間');
@@ -129,15 +137,45 @@ class AdEventController extends Controller
      *
      * @return Form
      */
-    protected function form()
+    protected function form($id = null)
     {
         $form = new Form(new AdEvent);
+        $model = $id
+            ? AdEvent::find($id)
+            : null;
 
         $form->switch('enable', '啟用')->default(true);
         
         $form->text('name', '名稱');
-        $form->text('link', '連結');
+        // $form->select('link_type','連結類型')->options([
+        //     0 => '無',
+        //     1 => '商品連結',
+        //     2 => '商品品牌連結',
+        //     3 => '商品分類連結',
+        //     4 => '文章連結',
+        //     5 => '其他',
+        //     6 => '外部連結(請先儲存)',
+        // ])->default(6)->load('link', '/admin/maintainer/ad_news_links');
+        // if ($model) {
+        //     if ($model->link_type == 6) {
+        //         $form->text('link', '連結');
+        //     } else {
+        //         $news = new AdNewsController();
+        //         $links = $news->getLinksByType($model->link_type);
+        //         $option_links = [];
+        //         foreach ($links as $key => $val) {
+        //             $option_links[$val['id']] = $val['text'];
+        //         }
+                
+        //         $form->select('link', '連結')->options($option_links);
+        //     }
+        // } else {
+        //     $form->text('link', '連結');
+            
+        // }
         $form->image('image', '活動圖片')->uniqueName();
+        $form->text('link', '活動連結');
+        $form->switch('show_index', '是否顯示在首頁');
         $form->number('sort', '優先權')->default(1);
 
         $multipleArray = [];

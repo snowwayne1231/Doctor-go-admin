@@ -45,6 +45,7 @@ Route::group([
 
         $router2->resource('setting_point_give', SettingPointGiveController::class);
         $router2->resource('setting_promotion', SettingPromotionController::class);
+        // $router2->resource('setting', SettingController::class);
         
         
         

@@ -176,24 +176,28 @@ class CustomerController extends Controller
         // });
 
         $form->saving(function (Form $form) {
-            $form->password = bcrypt($form->password);
-        });
-
-        $form->saved(function (Form $form) {
             $model = $form->model();
-
-            if ($model->status == 1) {
-
+            
+            if ($model->status != 1 && $form->status == 1) {
+                // dd($model->status.' : '. $form->status);
                 if (!is_null(env('MAIL_USERNAME'))) {
                     \Mail::raw('您的帳戶: '.$model->email.' 已經激活， 激活時間: '. now(), function($message) use($model) {
                         $message->to($model->email)->subject('美醫聯購 手機 APP 帳戶激活');
                     });
                 }
-                
-            } else {
-                
-                Customer::find($model->id)->removeCache();
             }
+
+            if ($form->password) {
+                $form->password = bcrypt($form->password);
+            } else {
+                $form->password = $model->password;
+            }
+            
+        });
+
+        $form->saved(function (Form $form) {
+            $model = $form->model();
+            Customer::find($model->id)->removeCache();
         });
 
         return $form;

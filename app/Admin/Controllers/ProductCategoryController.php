@@ -115,6 +115,9 @@ class ProductCategoryController extends Controller
         $show->event_image('活動圖')->image();
 
         $show->enable('啟用')->using([1=>'開', 0=>'關']);
+        
+        $form->outside_link_name('右上角外部連結名稱');
+        $form->outside_link('右上角外部連結');
 
         $show->sort('優先權');
         
@@ -182,6 +185,9 @@ class ProductCategoryController extends Controller
             //     'second' => '二手商品',
             //     'maintenance' => '保養品',
             // ]);
+
+            $form->text('outside_link_name', '右上角外部連結名稱');
+            $form->text('outside_link', '右上角外部連結');
         
             $form->number('sort', '優先權')->default(1);
         });

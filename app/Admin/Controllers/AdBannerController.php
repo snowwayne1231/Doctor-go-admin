@@ -39,7 +39,7 @@ class AdBannerController extends Controller
         return $content
             ->header(self::$header_title)
             ->description('編輯')
-            ->body($this->form()->edit($id));
+            ->body($this->form($id)->edit($id));
     }
 
     public function create(Content $content)
@@ -85,7 +85,16 @@ class AdBannerController extends Controller
         $show->image('圖片');
         $show->name('名稱');
         $show->description('描述');
-        $show->link('連結');
+        $show->link_type('連結類型')->using([
+            0 => '無',
+            1 => '商品連結',
+            2 => '商品品牌連結',
+            3 => '商品分類連結',
+            4 => '文章連結',
+            5 => '其他',
+        ]);
+        // $show->link_value('內部連結');
+        $show->link('外部連結');
         $show->sort('優先權');
         
         $show->created_at('創建時間');
@@ -99,15 +108,36 @@ class AdBannerController extends Controller
      *
      * @return Form
      */
-    protected function form()
+    protected function form($id = null)
     {
         $form = new Form(new AdBanner);
+        $model = $id
+            ? AdBanner::find($id)
+            : null;
 
         $form->select('status', '狀態')->options([1=> '正常', 4=> '關閉']);
         $form->image('image', '圖片(768x384最佳)')->uniqueName();
         $form->text('name', '名稱');
         $form->textarea('description', '描述');
-        $form->text('link', '連結');
+        $form->select('link_type','連結類型')->options([
+            0 => '無',
+            1 => '商品連結',
+            2 => '商品品牌連結',
+            3 => '商品分類連結',
+            4 => '文章連結',
+            5 => '其他',
+            6 => '外部連結',
+        ])->default(0)->load('link_value', '/admin/maintainer/ad_news_links');
+
+        if ($model) {
+            $form->select('link_value', '內部連結')->options('/admin/maintainer/ad_news_links?q='.$model->link_type);
+        } else {
+            $form->select('link_value', '內部連結');
+        }
+        
+        $form->text('link', '外部連結 (必須設置連結類型)');
+        
+        
         $form->number('sort', '優先權');
 
         return $form;

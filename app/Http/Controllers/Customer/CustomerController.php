@@ -158,7 +158,13 @@ class CustomerController extends BasicController
                 case 'postcode':
                 case 'address_1':
                 case 'address_2':
-                    $customer->address->$key = $val;
+                    if ($customer->address) {
+                        $customer->address->$key = $val;
+                    } else {
+                        $address = $this->makeNewAddress($inputs, $customer->id);
+                        $customer = Customer::find($inputs['id']);
+                    }
+                    
                 break;
                 case 'doctor_profile_image':
                 case 'doctor_clinic_image':
@@ -225,20 +231,30 @@ class CustomerController extends BasicController
         
         $model_customer = Customer::find($id);
 
+        if (empty($model_customer->address) || empty($customer['address']) || empty($nextCustomer['address'])) {
+            $address = self::makeNewAddress([], $id);
+            $customer['address'] = $address->toArray();
+            $model_customer = Customer::find($id);
+            // dd($customer);
+            // $model_customer->address = $address;
+        }
+
         foreach ($nextCustomer as $key => $val) {
             if ($key == 'login_time') { continue; }
             if (is_array($val)) {
+                
                 foreach ($val as $k => $v) {
                     $model_customer->$key->$k = $v;
                     $customer[$key][$k] = $v;
                 }
-            } else {
+            } else if ($val) {
                 $model_customer->$key = $val;
                 $customer[$key] = $val;
             }
         }
-
+        
         $model_customer->save();
+        $model_customer->address->save();
         
         \Cache::put("customer_$id", $customer, now()->addWeekdays(2));
 
@@ -269,7 +285,7 @@ class CustomerController extends BasicController
     }
 
 
-    private function makeNewCustomer($inputs) {
+    private static function makeNewCustomer($inputs) {
         $newCustomer = new Customer();
         $newCustomer->status = 0;
         $newCustomer->firstname = $inputs['firstname'];
@@ -290,13 +306,13 @@ class CustomerController extends BasicController
     }
 
 
-    private function makeNewAddress($inputs, $customer_id) {
+    private static function makeNewAddress($inputs, $customer_id) {
         $newAddress = new Address();
-        $newAddress->country_id = $inputs['country'];
+        $newAddress->country_id = isset($inputs['country']) ? $inputs['country'] : 205;
         $newAddress->customer_id = $customer_id;
-        $newAddress->address_1 = $inputs['address_1'];
-        $newAddress->address_2 = $inputs['address_2'];
-        $newAddress->postcode = $inputs['postCode'];
+        if (isset($inputs['address_1'])) { $newAddress->address_1 = $inputs['address_1']; }
+        if (isset($inputs['address_2'])) { $newAddress->address_2 = $inputs['address_2']; }
+        if (isset($inputs['postCode'])) { $newAddress->postcode = $inputs['postCode']; }
         $newAddress->save();
         return $newAddress;
     }

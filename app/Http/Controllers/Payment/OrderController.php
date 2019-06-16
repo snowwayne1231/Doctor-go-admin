@@ -12,6 +12,7 @@ use App\Models\PaymentCart;
 use App\Models\PaymentOrder;
 use App\Models\PaymentOrderProduct;
 use App\Models\SettingPromotion;
+use App\Models\Customer;
 
 class OrderController extends BasicController
 {
@@ -25,6 +26,19 @@ class OrderController extends BasicController
 
         $buying = json_decode($inputs['json'], true);
         $customer = $request->customer;
+
+        if (empty($customer['address'])) {
+            
+            $customer = CustomerController::updateCustomer($request, $customer);
+        }
+
+        if (
+            empty($customer['address']['address_1']) ||
+            empty($customer['address']['address_2']) ||
+            empty($customer['address']['postcode'])
+        ) {
+            throw new \Exception('錯誤的地址 請完善地址資料');
+        }
 
         $product_ids = [];
         foreach ($buying as $e) {
@@ -61,25 +75,26 @@ class OrderController extends BasicController
 
         $products = Product::whereIn('id', $product_ids);
         $product_price_map = $products->pluck('price', 'id');
-        $product_discount_map = $products->pluck('point_can_be_discount', 'id');
+        // $product_discount_map = $products->pluck('point_can_be_discount', 'id');
         $product_quantity_map = $products->pluck('quantity', 'id');
         $point_reward_map = $products->pluck('point_reward', 'id');
 
         foreach ($buying as $e) {
             $id = $e['product'];
             $amount = $e['amount'];
-            $redeem = $e['redeem'] ?? 0;
+            $redeem_point = $e['redeem'] ?? 0;
 
             if (!isset($product_price_map[$id])) { throw new \Exception('錯誤的產品代號'); }
 
             $price = $product_price_map[$id];
-            $discount = $product_discount_map[$id];
+            // $discount = $product_discount_map[$id];
             $quantity = $product_quantity_map[$id];
             $reward = $point_reward_map[$id];
 
             if ($amount > $quantity) { throw new \Exception('存貨不足'); }
 
-            $tr = $discount * $redeem;
+            // $tr = $discount * $redeem;
+            $tr = $redeem_point;
             $tp = ($price * $amount);
 
             $total_price += $tp;
@@ -129,9 +144,14 @@ class OrderController extends BasicController
         $cart->json = '[]';
         $cart->save();
 
-        \Mail::raw('有訂單剛剛完成下單 從 '.$request->ip().' 訂單時間: '. now(), function($message) {
-            $message->to(env('MAIL_FROM_ADDRESS'))->subject('美醫聯購 手機 APP 訂單下單');
-        });
+        $mail_address = env('MAIL_FROM_ADDRESS', null);
+
+        if (isset($mail_address)) {
+            \Mail::raw('有訂單剛剛完成下單 從 '.$request->ip().' 訂單時間: '. now(), function($message) {
+                $message->to($mail_address)->subject('美醫聯購 手機 APP 訂單下單');
+            });
+        }
+        
 
         $result = [
             'order' => $order->toArray(),
