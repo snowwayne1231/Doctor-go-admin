@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 // });
 
 Route::get('/sms/{dstaddr}', 'SmsController@send');
+Route::post('/server/storage/error', 'Exception\ErrorController@storage');
 
 Route::post('/register', 'Customer\CustomerController@register');
 Route::put('/login', 'Customer\CustomerController@login');
