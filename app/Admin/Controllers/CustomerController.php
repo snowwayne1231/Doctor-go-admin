@@ -75,9 +75,14 @@ class CustomerController extends Controller
             '4' => '停用',
         ]);
         $grid->doctor_profile('醫生執照號碼');
-        $grid->doctor_profile_image_id('醫生執照圖檔')->display(function($id) {
-            return '<img style="max-height: 45px; max-width: 90px;" src="/api/image/'.$id.'">';
-        });;
+        // $grid->doctor_profile_image_id('醫生執照圖檔')->display(function($id) {
+        //     return '<img style="max-height: 45px; max-width: 90px;" src="/api/image/'.$id.'">';
+        // });
+        $grid->doctor_profile_image_id('醫生執照圖檔')->display(function($id){
+            return '/api/image/'.$id;
+        })->lightbox([
+            'server' => 'http://'.$_SERVER['SERVER_ADDR'],
+        ]);
         // $grid->doctor_clinic('醫生診所執照號');
         // $grid->doctor_clinic_image_id('醫生診所執照圖檔')->display(function($id) {
         //     return '<img style="max-height: 45px; max-width: 90px;" src="/api/image/'.$id.'">';
@@ -127,12 +132,12 @@ class CustomerController extends Controller
 
         $show->doctor_profile('醫生執照');
         $show->doctor_profile_image_id('醫生執照圖檔')->unescape()->as(function($id) {
-            return '<img style="max-height: 160px; max-width: 480px;" src="/api/image/'.$id.'">';
+            return '<img style="max-height: 360px; max-width: 680px;" src="/api/image/'.$id.'">';
         });
 
         $show->doctor_clinic('醫生診所執照');
         $show->doctor_clinic_image_id('醫生診所執照圖檔')->unescape()->as(function($id) {
-            return '<img style="max-height: 160px; max-width: 480px;" src="/api/image/'.$id.'">';
+            return '<img style="max-height: 360px; max-width: 680px;" src="/api/image/'.$id.'">';
         });
         
         

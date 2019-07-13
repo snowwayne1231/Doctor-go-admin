@@ -336,6 +336,9 @@ return [
                     '对齐方式' => '對齊方式',
                 ],
             ]
-        ]
+        ],
+        'grid-lightbox' => [
+            'enable' => true,
+        ],
     ],
 ];
