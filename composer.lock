@@ -601,16 +601,16 @@
         },
         {
             "name": "encore/laravel-admin",
-            "version": "v1.6.8",
+            "version": "v1.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/z-song/laravel-admin.git",
-                "reference": "818e6691f6ed419f9d30ad4aaca0846fb1243313"
+                "reference": "6306ab390c6194a8cd847bcdc6232669de32b3bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/z-song/laravel-admin/zipball/818e6691f6ed419f9d30ad4aaca0846fb1243313",
-                "reference": "818e6691f6ed419f9d30ad4aaca0846fb1243313",
+                "url": "https://api.github.com/repos/z-song/laravel-admin/zipball/6306ab390c6194a8cd847bcdc6232669de32b3bb",
+                "reference": "6306ab390c6194a8cd847bcdc6232669de32b3bb",
                 "shasum": ""
             },
             "require": {
@@ -624,7 +624,7 @@
                 "intervention/image": "~2.3",
                 "laravel/browser-kit-testing": "^2.0",
                 "laravel/laravel": "~5.5",
-                "phpunit/phpunit": "~6.0",
+                "phpunit/phpunit": "~6.0 || ~8.0",
                 "symfony/css-selector": "~3.1"
             },
             "suggest": {
@@ -668,7 +668,7 @@
                 "grid",
                 "laravel"
             ],
-            "time": "2018-12-13T06:35:28+00:00"
+            "time": "2019-06-23T10:12:08+00:00"
         },
         {
             "name": "erusev/parsedown",

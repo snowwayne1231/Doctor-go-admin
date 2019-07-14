@@ -48,7 +48,7 @@ Route::group([
         // $router2->resource('setting', SettingController::class);
         
         
-        
+        $router2->resource('products_group_buying', ProductGroupBuyingController::class);
 
     });
 

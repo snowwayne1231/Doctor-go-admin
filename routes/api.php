@@ -49,6 +49,8 @@ Route::group(['middleware' => 'api-auth'], function ($route) {
         $route_payment->put('cart', 'CartController@upsert');
 
         $route_payment->post('order', 'OrderController@create');
+
+        $route_payment->post('groupbuying', 'GroupBuyingController@create');
     });
 
 });
@@ -56,6 +58,19 @@ Route::group(['middleware' => 'api-auth'], function ($route) {
 Route::get('/psa/content/{id}', 'GetDataController@psaContent');
 
 
+Route::options('/{a}', function ($req){
+    return 'ok';
+});
 
-// Route::get('/touch', 'ApiKeyController@touch');
+Route::options('/{a}/{b}', function ($req){
+    return 'ok';
+});
+
+Route::options('/{a}/{b}/{c}', function ($req){
+    return 'ok';
+});
+
+Route::options('/{a}/{b}/{c}/{d}', function ($req){
+    return 'ok';
+});
 
