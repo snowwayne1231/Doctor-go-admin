@@ -110,6 +110,7 @@ class PaymentGroupBuyingOrderController extends Controller
         $show->status('狀態')->using([
             '0' => '取消',
             '1' => '正常',
+            '5' => '完成',
         ]);
 
         $show->quantity('購買數量');
@@ -131,6 +132,7 @@ class PaymentGroupBuyingOrderController extends Controller
         $form->select('status', '狀態')->options([
             '0' => '取消',
             '1' => '正常',
+            '5' => '完成',
         ])->default();
 
         return $form;

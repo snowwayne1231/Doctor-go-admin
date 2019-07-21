@@ -173,6 +173,7 @@ class ProductGroupBuyingOrderController extends Controller
             $orders->status('狀態')->using([
                 '0' => '取消',
                 '1' => '正常',
+                '5' => '完成',
             ]);
             $orders->quantity('購買數量');
             $orders->total_net('總價');
