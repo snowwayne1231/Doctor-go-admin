@@ -84,9 +84,15 @@ class ProductGroupBuyingController extends Controller
         $grid->filter(function($filter){
         
             // $filter->like('name', '名稱');
-            $filter->equal('status', '狀態')->select([ 1 => '正常', 0 => '停用']);
+            $filter->equal('status', '狀態')->select([
+                '0' => '取消',
+                '1' => '正常',
+                '2' => '暫停',
+                '5' => '結單',
+            ]);
             
         });
+        
 
         return $grid;
     }

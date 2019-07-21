@@ -32,10 +32,20 @@ class GroupBuyingController extends BasicController
             throw new \Exception('Worng id.');
         }
 
+        if ($product_group->status != 1) {
+            throw new \Exception('It is not open.');
+        }
+
+        $end_time = strtotime($product_group->time_end);
+        if (time() > $end_time) {
+            throw new \Exception('Over deadline.');
+        }
+
         $order = new PaymentGroupOrder();
         $order->product_order_id = $inputs['id'];
         $order->quantity = $inputs['quantity'];
         $order->customer_id = $customer_id;
+        $order->product_id = $product_group->product_id;
         
         $order->save();
 

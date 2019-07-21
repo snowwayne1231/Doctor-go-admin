@@ -22,7 +22,7 @@ class ProductGroupBuying extends Model
     }
 
     public function orders() {
-        return $this->hasMany('App\Model\PaymentGroupOrder', 'product_order_id');
+        return $this->hasMany('App\Models\PaymentGroupOrder', 'product_order_id');
     }
 
     public function getDiscountJsonAttribute($json)
@@ -33,5 +33,26 @@ class ProductGroupBuying extends Model
     public function setDiscountJsonAttribute($json)
     {
         $this->attributes['discount_json'] = json_encode(array_values($json));
+    }
+
+    public function getPriceAttribute()
+    {
+        $json = json_decode($this->attributes['discount_json'], true);
+        $quantity = intval($this->attributes['sum_quantity']);
+        if (isset($json[0])) {
+            $loc = $json[0];
+
+            foreach ($json as $j) {
+                if($quantity >= intval($j['condition_quantity'])) {
+                    $loc = $j;
+                }
+            }
+            $price = intval($loc['price']);
+        } else {
+            $price = $this->product['price'];
+        }
+        
+        
+        return $price;
     }
 }

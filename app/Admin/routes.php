@@ -49,6 +49,8 @@ Route::group([
         
         
         $router2->resource('products_group_buying', ProductGroupBuyingController::class);
+        $router2->resource('products_group_buying_order', ProductGroupBuyingOrderController::class);
+        $router2->resource('payment_group_buying_order', PaymentGroupBuyingOrderController::class);
 
     });
 

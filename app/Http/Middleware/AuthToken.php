@@ -46,8 +46,9 @@ class AuthToken
                 }
 
                 // dd($customer);
-
-                if ($decrypt_time != $customer['login_time']) {
+                if (!isset($customer['login_time'])) {
+                    $customer = ['error' => '登錄資訊錯誤'];
+                } else if ($decrypt_time != $customer['login_time']) {
                     // \Cache::forget($key);
                     // throw new AuthException('已有其他地方登入此帳號');
                     $customer = ['error' => '已有其他地方登入此帳號'];
