@@ -78,11 +78,21 @@ class CustomerController extends Controller
         // $grid->doctor_profile_image_id('醫生執照圖檔')->display(function($id) {
         //     return '<img style="max-height: 45px; max-width: 90px;" src="/api/image/'.$id.'">';
         // });
+
         $grid->doctor_profile_image_id('醫生執照圖檔')->display(function($id){
             return '/api/image/'.$id;
         })->lightbox([
             'server' => 'http://'.$_SERVER['SERVER_ADDR'],
+            'height' => 80,
+            'width' => 160,
         ]);
+
+        // $grid->doctor_profile_image_id('醫生執照圖檔')->lightbox([
+        //     'server' => 'http://'.$_SERVER['SERVER_ADDR'],
+        // ])->display(function($id){
+        //     return '/api/image/'.$id;
+        // });
+
         // $grid->doctor_clinic('醫生診所執照號');
         // $grid->doctor_clinic_image_id('醫生診所執照圖檔')->display(function($id) {
         //     return '<img style="max-height: 45px; max-width: 90px;" src="/api/image/'.$id.'">';
