@@ -133,7 +133,17 @@ class PaymentGroupBuyingOrderController extends Controller
             '0' => '取消',
             '1' => '正常',
             '5' => '完成',
-        ])->default();
+        ])->default(1);
+
+        // $form->saved(function (Form $form) {
+
+            // $model = $form->model();
+
+            // $status = $model->status;
+            // $id = $model->id;
+            // $product_order_id = $model->product_order_id;
+        
+        // });
 
         return $form;
     }

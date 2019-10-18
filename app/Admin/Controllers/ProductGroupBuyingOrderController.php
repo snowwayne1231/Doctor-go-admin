@@ -170,18 +170,19 @@ class ProductGroupBuyingOrderController extends Controller
             $orders->customer('客戶名/手機')->display(function($customer){
                 return $customer['firstname'].' '.$customer['lastname'].' / '.$customer['telephone'];
             });;
-            $orders->status('狀態')->using([
+            $orders->status('狀態')->select([
                 '0' => '取消',
                 '1' => '正常',
                 '5' => '完成',
             ]);
             $orders->quantity('購買數量');
-            $orders->total_net('總價');
+            $orders->final_price('最後價格');
+            $orders->total_net('淨總價');
 
             $orders->actions(function ($actions) {
                 $actions->disableDelete();
                 $actions->disableEdit();
-                // $actions->disableView();
+                $actions->disableView();
             });
 
             $orders->filter(function ($filter) {
@@ -189,6 +190,7 @@ class ProductGroupBuyingOrderController extends Controller
                 $filter->equal('status', '狀態')->select([
                     '0' => '取消',
                     '1' => '正常',
+                    '5' => '完成',
                 ]);
             });
 
@@ -199,6 +201,7 @@ class ProductGroupBuyingOrderController extends Controller
             });
 
             $orders->disableCreateButton();
+            $orders->disableActions();
         });
 
         return $show;
