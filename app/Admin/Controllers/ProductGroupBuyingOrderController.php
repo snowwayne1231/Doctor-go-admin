@@ -285,11 +285,11 @@ class ProductGroupBuyingOrderController extends Controller
 
             } else if ($status >= 1) {
 
-                PaymentGroupOrder::where('product_order_id', $id)->update(['status' => 1]);
+                // PaymentGroupOrder::where('product_order_id', $id)->update(['status' => 1]);
 
             } else {
 
-                PaymentGroupOrder::where('product_order_id', $id)->update(['status' => 0]);
+                // PaymentGroupOrder::where('product_order_id', $id)->update(['status' => 0]);
 
             }
         
