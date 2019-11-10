@@ -46,11 +46,12 @@ class GroupBuyingController extends BasicController
         $order->quantity = $inputs['quantity'];
         $order->customer_id = $customer_id;
         $order->product_id = $product_group->product_id;
+        // $order->status = 9;
         
         $order->save();
 
-        $product_group->increment('sum_quantity', $inputs['quantity']);
-        $product_group->increment('sum_order', 1);
+        // $product_group->increment('sum_quantity', $inputs['quantity']);
+        // $product_group->increment('sum_order', 1);
 
         return $this->basicJSON($product_group);
     }

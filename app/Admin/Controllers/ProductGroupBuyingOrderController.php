@@ -172,7 +172,7 @@ class ProductGroupBuyingOrderController extends Controller
             });;
             $orders->status('狀態')->select([
                 '0' => '取消',
-                '1' => '正常',
+                '1' => '確認中',
                 '5' => '完成',
             ]);
             $orders->quantity('購買數量');
