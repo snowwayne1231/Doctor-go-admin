@@ -263,17 +263,24 @@ class ProductGroupBuyingOrderController extends Controller
                 $group_total_net = 0;
                 $group_total_redeem = 0;
                 $group_sum_quantity = 0;
-                $group_sum_order = count($orders);
+                $group_sum_order = 0;
 
                 foreach($orders as $order) {
-                    $group_sum_quantity += $order->quantity;
+                    if ($order->status == 5) {
 
-                    $order->final_price = $price;
-                    $order->total_net = $order->quantity * $price;
-                    $order->status = 5;
-                    $order->save();
+                        $order->final_price = $price;
+                        $order->total_net = $order->quantity * $price;
+                        $order->save();
 
-                    $group_total += $order->total_net;
+                        $group_sum_quantity += $order->quantity;
+                        $group_total += $order->total_net;
+                        $group_sum_order += 1;
+                    } else {
+                        $order->status = 0;
+                        $order->save();
+                    }
+
+                    
                 }
 
                 $group_buying = ProductGroupBuying::find($id);
