@@ -144,7 +144,7 @@ class PaymentGroupBuyingOrderController extends Controller
             $id = $model->id;
             $product_order_id = $model->product_order_id;
 
-            if ($status == 5) {
+            if ($status == 5 || true) {
                 // dd($model);
 
                 $all_payment_orders = PaymentGroupOrder::where(['product_order_id' => $product_order_id])->get();
