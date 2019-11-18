@@ -147,7 +147,7 @@ class OrderController extends BasicController
         $mail_address = env('MAIL_FROM_ADDRESS', null);
 
         if (isset($mail_address)) {
-            \Mail::raw('有訂單剛剛完成下單 從 '.$request->ip().' 訂單時間: '. now(), function($message) {
+            \Mail::raw('有訂單剛剛完成下單 從 '.$request->ip().' 訂單時間: '. now(), function($message) use($mail_address) {
                 $message->to($mail_address)->subject('美醫聯購 手機 APP 訂單下單');
             });
         }
