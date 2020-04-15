@@ -140,6 +140,10 @@ class CustomerController extends Controller
             '4' => '停用',
         ]);
 
+        $show->address('地址')->unescape()->as(function ($json) {
+            return $json['address_1'].'/('.$json['postcode'].')  '.$json['address_2'];
+        });
+
         $show->doctor_profile('醫生執照');
         $show->doctor_profile_image_id('醫生執照圖檔')->unescape()->as(function($id) {
             return '<img style="max-height: 360px; max-width: 680px;" src="/api/image/'.$id.'">';
